@@ -1,9 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+
 import './index.css';
 import App from './App';
 import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 import reportWebVitals from './reportWebVitals';
+
+import "@fontsource/source-sans-pro"
+import "@fontsource/source-sans-pro/700.css"
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
