@@ -61,6 +61,9 @@ const createPaymentRequest = () => {
 
 const App = () => {
     const handlePaymentFlow = () => {
+        if (!window.PaymentRequest) {
+            alert("Pay using stripe!")
+        }
         const request = createPaymentRequest()
 
         if (!request.canMakePayment()) {
