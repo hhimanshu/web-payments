@@ -80,6 +80,14 @@ const App = () => {
                 //successPanel.style.display = "block";
             });
             console.log(paymentResponse)
+        }).catch((error) => {
+            if (error.code === DOMException.NOT_SUPPORTED_ERR) {
+                window.location.href = "https://bobpay.xyz/#download";
+            } else {
+                // Other kinds of errors; cancelled or failed payment. For demo purposes:
+               // introPanel.style.display = "none";
+                //legacyPanel.style.display = "block";
+            }
         });
     }
 
