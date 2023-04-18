@@ -20,6 +20,7 @@ const getGooglePaymentsConfiguration = () => {
             parameters: {
                 allowedAuthMethods: allowedCardAuthMethods,
                 allowedCardNetworks: allowedCardNetworks//.map(network => network.toLowerCase())
+                // ask for email or billing address
             },
             tokenizationSpecification: {
                 type: 'PAYMENT_GATEWAY',
@@ -35,20 +36,35 @@ const getGooglePaymentsConfiguration = () => {
 }
 
 const createPaymentRequest = () => {
+
+    const cardMethod = {
+        supportedMethods: 'basic-card',
+        data: {
+            supportedNetworks: [
+                'visa', 'mastercard'
+            ]
+        }
+    };
     // Add support for the Google Pay API.
-    const methodData = [
+    const methodData: PaymentMethodData[] = [
         {
             supportedMethods: 'https://google.com/pay',
-            data: getGooglePaymentsConfiguration()
+            data: getGooglePaymentsConfiguration(),
         },
-        {
+        /*{
             supportedMethods: 'basic-card',
             data: getGooglePaymentsConfiguration()
-        }
+        }*/
     ]
 
-    const details = {
-        total: {label: 'Test Purchase', amount: {currency: 'USD', value: '99.00'}}
+    const details: PaymentDetailsInit = {
+        displayItems: [
+            {
+                label: 'PWA Demo Payment',
+                amount: {currency: 'USD', value: '0.01'}
+            }
+        ],
+        total: {label: 'App Purchase', amount: {currency: 'USD', value: '0.01'}},
     };
 
     const options = {
@@ -58,6 +74,7 @@ const createPaymentRequest = () => {
 
     return new PaymentRequest(methodData, details);
 }
+
 
 const App = () => {
     const handlePaymentFlow = () => {
@@ -81,11 +98,12 @@ const App = () => {
             });
             console.log(paymentResponse)
         }).catch((error) => {
+            console.log(error)
             if (error.code === DOMException.NOT_SUPPORTED_ERR) {
-                window.location.href = "https://bobpay.xyz/#download";
+                //window.location.href = "https://bobpay.xyz/#download";
             } else {
                 // Other kinds of errors; cancelled or failed payment. For demo purposes:
-               // introPanel.style.display = "none";
+                // introPanel.style.display = "none";
                 //legacyPanel.style.display = "block";
             }
         });
