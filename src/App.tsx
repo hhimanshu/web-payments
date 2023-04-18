@@ -1,26 +1,25 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+import {Box, Button, Typography} from "@mui/material";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+const App = () => {
+    const btnHandler = () => alert('Processing ...')
+    return (
+        <div className="App">
+            <header className="App-header">
+                <Box>
+                    <Typography
+                        fontWeight={"medium"}
+                        color={'black'}
+                        pb={1}
+                    >Total: $1.00</Typography>
+                    <Button variant={"contained"} onClick={btnHandler}>
+                        <Typography>UPGRADE</Typography>
+                    </Button>
+                </Box>
+            </header>
+        </div>
+    );
 }
 
 export default App;
