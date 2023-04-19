@@ -1,48 +1,13 @@
 import React, {useEffect, useState} from 'react';
 import './App.css';
-import {Box, Button, Card, Stack, Typography} from "@mui/material";
+import {Box} from "@mui/material";
 import 'cordova-plugin-purchase';
-import WorkspacePremiumRoundedIcon from '@mui/icons-material/WorkspacePremiumRounded';
+import {DisplayPurchasedProduct} from "./store/DisplayPurchasedProduct";
+import {DisplayPurchasableProduct} from "./store/DisplayPurchasableProduct";
 
 //const iOSProductId = "pwaInAppPurchasePro9_99"
 const productId = "pwa_inapp_pro_9_99"
 
-
-const DisplayPurchasableProduct = ({
-                                       product,
-                                       onClick
-                                   }: { product: CdvPurchase.Product, onClick: (product: CdvPurchase.Product) => void }) => {
-    const pricing = product.pricing;
-    return <Box px={2}>
-        <Card variant="outlined">
-            <Box px={2} py={3}>
-                <Typography
-                    variant={"caption"}
-                    color={"grey"}
-                >
-                    {product.title.toUpperCase()}</Typography>
-                <Typography py={2}
-                            variant={"subtitle1"}>{pricing?.currency} {pricing?.price}</Typography>
-                <Button variant={"contained"} onClick={() => onClick(product)} fullWidth>UPGRADE</Button>
-            </Box>
-        </Card>
-    </Box>
-}
-const DisplayPurchasedProduct = ({product}: { product: CdvPurchase.Product }) => {
-    return <Box px={2}>
-        <Card variant="outlined" style={{borderColor: "blue"}}>
-            <Stack px={2} py={3} direction="column" alignItems={"flex-start"}>
-                <Stack direction={"row"} spacing={1} alignItems={"center"}>
-                    <WorkspacePremiumRoundedIcon color={"primary"} fontSize={"medium"}/>
-                    <Typography variant={"caption"}
-                                color={"grey"}>{"Your Current Plan".toUpperCase()}</Typography>
-                </Stack>
-                <Typography align={"left"} py={2}
-                            variant={"subtitle2"}>{product.title.toUpperCase()}</Typography>
-            </Stack>
-        </Card>
-    </Box>
-}
 const App = () => {
     const {store, ProductType, Platform, LogLevel} = CdvPurchase;
     const [purchasableProducts, setPurchasableProducts] = useState<CdvPurchase.Product[]>([])
@@ -113,7 +78,6 @@ const App = () => {
 
             store.ready(() => {
                 console.log('ready', store.products);
-                //store.order(iOSProductId);
             });
 
             store.initialize([Platform.GOOGLE_PLAY])
