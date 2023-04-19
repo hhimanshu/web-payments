@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import './App.css';
 import {Box, Button, Card, Stack, Typography} from "@mui/material";
 import 'cordova-plugin-purchase';
+import WorkspacePremiumRoundedIcon from '@mui/icons-material/WorkspacePremiumRounded';
 
 //const iOSProductId = "pwaInAppPurchasePro9_99"
 const productId = "pwa_inapp_pro_9_99"
@@ -29,12 +30,15 @@ const DisplayPurchasableProduct = ({
 }
 const DisplayPurchasedProduct = ({product}: { product: CdvPurchase.Product }) => {
     return <Box px={2}>
-        <Card variant="outlined">
+        <Card variant="outlined" style={{borderColor: "blue"}}>
             <Stack px={2} py={3} direction="column" alignItems={"flex-start"}>
-                <Typography variant={"caption"}
-                            color={"grey"}>{"Your Current Plan".toUpperCase()}</Typography>
+                <Stack direction={"row"} spacing={1} alignItems={"center"}>
+                    <WorkspacePremiumRoundedIcon color={"primary"} fontSize={"medium"}/>
+                    <Typography variant={"caption"}
+                                color={"grey"}>{"Your Current Plan".toUpperCase()}</Typography>
+                </Stack>
                 <Typography align={"left"} py={2}
-                            variant={"h6"}>{product.title.toUpperCase()}</Typography>
+                            variant={"subtitle2"}>{product.title.toUpperCase()}</Typography>
             </Stack>
         </Card>
     </Box>
