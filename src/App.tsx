@@ -6,8 +6,8 @@ import 'cordova-plugin-purchase';
 //const iOSProductId = "pwaInAppPurchasePro9_99"
 const productId = "pwa_inapp_pro_9_99"
 
-const DisplayProduct = ({product}: { product: CdvPurchase.Product }) => {
-    console.log(`Displaying product => ${JSON.stringify(product)}`)
+
+const DisplayProduct = ({product, onClick}: { product: CdvPurchase.Product, onClick: (product: CdvPurchase.Product) => void }) => {
     const pricing = product.pricing;
     return <Box px={2}>
         <Card variant="outlined">
@@ -19,7 +19,7 @@ const DisplayProduct = ({product}: { product: CdvPurchase.Product }) => {
                     {product.title.toUpperCase()}</Typography>
                 <Typography py={2}
                             variant={"subtitle1"}>{pricing?.currency} {pricing?.price}</Typography>
-                <Button variant={"contained"} fullWidth>UPGRADE</Button>
+                <Button variant={"contained"} onClick={() => onClick(product)} fullWidth>UPGRADE</Button>
             </Box>
         </Card>
     </Box>
@@ -35,8 +35,12 @@ const App = () => {
         });
     }
 
-    const placeOrder = () => {
-        store.get("subscription1")?.getOffer()?.order()
+
+    const placeOrder = (product: CdvPurchase.Product) => {
+        console.log(`placing order for productId=${product.id}`)
+        const offer = store.get(product.id, product.platform)?.getOffer();
+        console.log(`offer=${JSON.stringify(offer)}`)
+        offer?.order()
             .then(result => {
                 if (result) {
                     console.log("ERROR. Failed to place order. " + result.code + ": " + result.message);
@@ -110,7 +114,7 @@ const App = () => {
         <div className="App">
             <header className="App-header">
                 {products && <Box>
-                    {products.map(product => <DisplayProduct product={product}/>)}
+                    {products.map(product => <DisplayProduct product={product} onClick={placeOrder}/>)}
                 </Box>}
             </header>
         </div>
