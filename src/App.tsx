@@ -6,11 +6,39 @@ import 'cordova-plugin-purchase';
 //const iOSProductId = "pwaInAppPurchasePro9_99"
 const productId = "pwa_inapp_pro_9_99"
 const App = () => {
+    const {store, ProductType, Platform, LogLevel} = CdvPurchase;
+    const updatePurchases = (receipt: CdvPurchase.Receipt) => {
+        receipt.transactions.forEach(transaction => {
+            transaction.products.forEach(trProduct => {
+                console.log(`product owned: ${trProduct.id}`);
+            });
+        });
+    }
+
+    const placeOrder = () => {
+        store.get("subscription1")?.getOffer()?.order()
+            .then(result => {
+                if (result) {
+                    console.log("ERROR. Failed to place order. " + result.code + ": " + result.message);
+                } else {
+                    console.log("subscription1 ordered successfully");
+                }
+            });
+    }
+
+    const updateUI = (product: CdvPurchase.Product) => {
+        console.log(`- title: ${product.title}`);
+        const pricing = product.pricing;
+        if (pricing) {
+            console.log(`  price: ${pricing.price} ${pricing.currency}`);
+        }
+    }
+
     useEffect(() => {
         console.log("Setting up store if this is a mobile device")
         document.addEventListener("deviceready", () => {
             alert("The mobile device is ready")
-            const {store, ProductType, Platform, LogLevel} = CdvPurchase;
+
 
             store.verbosity = LogLevel.DEBUG;
 
@@ -24,7 +52,7 @@ const App = () => {
                 console.log('error', e);
             });
 
-            store.when()
+            /*store.when()
                 .productUpdated(() => {
                     console.log('product updated');
                 })
@@ -36,7 +64,13 @@ const App = () => {
                 })
                 .finished(value => {
                     console.log('finished', value);
-                });
+                });*/
+            store.when()
+                .approved(transaction => transaction.verify())
+                .verified(receipt => receipt.finish())
+                .finished(transaction => console.log('Products owned: ' + transaction.products.map(p => p.id).join(',')))
+                .receiptUpdated(r => updatePurchases(r))
+                .productUpdated(p => updateUI(p));
 
             store.ready(() => {
                 console.log('ready', store.products);
@@ -45,7 +79,7 @@ const App = () => {
 
             store.initialize([Platform.GOOGLE_PLAY])
                 .then(() => {
-                    console.log('initialize resolved', store.products);
+                    console.log('store is ready', store.products);
                     //store.order('my-product-id');
                 });
         }, {once: true})
