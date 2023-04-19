@@ -7,7 +7,10 @@ import 'cordova-plugin-purchase';
 const productId = "pwa_inapp_pro_9_99"
 
 
-const DisplayProduct = ({product, onClick}: { product: CdvPurchase.Product, onClick: (product: CdvPurchase.Product) => void }) => {
+const DisplayProduct = ({
+                            product,
+                            onClick
+                        }: { product: CdvPurchase.Product, onClick: (product: CdvPurchase.Product) => void }) => {
     const pricing = product.pricing;
     return <Box px={2}>
         <Card variant="outlined">
@@ -35,7 +38,6 @@ const App = () => {
         });
     }
 
-
     const placeOrder = (product: CdvPurchase.Product) => {
         console.log(`placing order for productId=${product.id}`)
         const offer = store.get(product.id, product.platform)?.getOffer();
@@ -45,7 +47,7 @@ const App = () => {
                 if (result) {
                     console.log("ERROR. Failed to place order. " + result.code + ": " + result.message);
                 } else {
-                    console.log("subscription1 ordered successfully");
+                    console.log(`${product.title} with ${product.id} ordered successfully`);
                 }
             });
     }
@@ -104,12 +106,9 @@ const App = () => {
                     setProducts(store.products)
                     //store.order('my-product-id');
                 });
-        }, {once: true})
-    }, [])
-    const btnHandler = () => {
-        console.log("Processing button click.")
+        })
+    }, [LogLevel.DEBUG, Platform.GOOGLE_PLAY, ProductType.NON_CONSUMABLE, store])
 
-    }
     return (
         <div className="App">
             <header className="App-header">
