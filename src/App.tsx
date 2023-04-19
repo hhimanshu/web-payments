@@ -1,12 +1,32 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import './App.css';
-import {Box, Button, Typography} from "@mui/material";
+import {Box, Button, Card, Typography} from "@mui/material";
 import 'cordova-plugin-purchase';
 
 //const iOSProductId = "pwaInAppPurchasePro9_99"
 const productId = "pwa_inapp_pro_9_99"
+
+const DisplayProduct = ({product}: { product: CdvPurchase.Product }) => {
+    console.log(`Displaying product => ${JSON.stringify(product)}`)
+    const pricing = product.pricing;
+    return <Box px={2}>
+        <Card variant="outlined">
+            <Box px={2} py={3}>
+                <Typography
+                    variant={"caption"}
+                    color={"grey"}
+                >
+                    {product.title.toUpperCase()}</Typography>
+                <Typography py={2}
+                            variant={"subtitle1"}>{pricing?.currency} {pricing?.price}</Typography>
+                <Button variant={"contained"} fullWidth>UPGRADE</Button>
+            </Box>
+        </Card>
+    </Box>
+}
 const App = () => {
     const {store, ProductType, Platform, LogLevel} = CdvPurchase;
+    const [products, setProducts] = useState<CdvPurchase.Product[]>([])
     const updatePurchases = (receipt: CdvPurchase.Receipt) => {
         receipt.transactions.forEach(transaction => {
             transaction.products.forEach(trProduct => {
@@ -37,9 +57,6 @@ const App = () => {
     useEffect(() => {
         console.log("Setting up store if this is a mobile device")
         document.addEventListener("deviceready", () => {
-            alert("The mobile device is ready")
-
-
             store.verbosity = LogLevel.DEBUG;
 
             store.register([{
@@ -80,6 +97,7 @@ const App = () => {
             store.initialize([Platform.GOOGLE_PLAY])
                 .then(() => {
                     console.log('store is ready', store.products);
+                    setProducts(store.products)
                     //store.order('my-product-id');
                 });
         }, {once: true})
@@ -91,16 +109,9 @@ const App = () => {
     return (
         <div className="App">
             <header className="App-header">
-                <Box>
-                    <Typography
-                        fontWeight={"medium"}
-                        color={'black'}
-                        pb={1}
-                    >Total: $1.00</Typography>
-                    <Button variant={"contained"} onClick={btnHandler}>
-                        <Typography>UPGRADE</Typography>
-                    </Button>
-                </Box>
+                {products && <Box>
+                    {products.map(product => <DisplayProduct product={product}/>)}
+                </Box>}
             </header>
         </div>
     );
