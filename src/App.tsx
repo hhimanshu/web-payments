@@ -3,7 +3,8 @@ import './App.css';
 import {Box, Button, Typography} from "@mui/material";
 import 'cordova-plugin-purchase';
 
-const iOSProductId = "pwaInAppPurchasePro9_99"
+//const iOSProductId = "pwaInAppPurchasePro9_99"
+const productId = "pwa_inapp_pro_9_99"
 const App = () => {
     useEffect(() => {
         console.log("Setting up store if this is a mobile device")
@@ -15,8 +16,8 @@ const App = () => {
 
             store.register([{
                 type: ProductType.NON_CONSUMABLE,
-                id: iOSProductId,
-                platform: Platform.APPLE_APPSTORE,
+                id: productId,
+                platform: Platform.GOOGLE_PLAY,
             }]);
 
             store.error(e => {
@@ -42,7 +43,7 @@ const App = () => {
                 //store.order(iOSProductId);
             });
 
-            store.initialize([Platform.APPLE_APPSTORE])
+            store.initialize([Platform.GOOGLE_PLAY])
                 .then(() => {
                     console.log('initialize resolved', store.products);
                     //store.order('my-product-id');
