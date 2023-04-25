@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">web-payments</string>
+    <string name="title_activity_main">web-payments</string>
+    <string name="package_name">com.bonsaiilabs.payments</string>
+    <string name="custom_url_scheme">com.bonsaiilabs.payments</string>
+</resources>
