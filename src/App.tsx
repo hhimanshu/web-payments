@@ -59,11 +59,18 @@ const App = () => {
         document.addEventListener("deviceready", () => {
             store.verbosity = LogLevel.DEBUG;
 
-            store.register([{
-                type: ProductType.NON_CONSUMABLE,
-                id: productId,
-                platform: Platform.GOOGLE_PLAY,
-            }]);
+            store.register([
+                {
+                    type: ProductType.NON_CONSUMABLE,
+                    id: productId,
+                    platform: Platform.GOOGLE_PLAY,
+                },
+                {
+                    type: ProductType.NON_CONSUMABLE,
+                    id: productId,
+                    platform: Platform.APPLE_APPSTORE,
+                }
+            ]);
 
             store.error(e => {
                 console.log('error', e);
@@ -80,13 +87,13 @@ const App = () => {
                 console.log('ready', store.products);
             });
 
-            store.initialize([Platform.GOOGLE_PLAY])
+            store.initialize([Platform.GOOGLE_PLAY, Platform.APPLE_APPSTORE])
                 .then(() => {
                     console.log('store is ready', store.products);
                     setPurchasableProducts(store.products.filter(p => p.canPurchase))
                 });
         })
-    }, [LogLevel.DEBUG, Platform.GOOGLE_PLAY, ProductType.NON_CONSUMABLE, store])
+    }, [LogLevel.DEBUG, Platform.GOOGLE_PLAY, Platform.APPLE_APPSTORE, ProductType.NON_CONSUMABLE, store])
 
     return (
         <div className="App">
