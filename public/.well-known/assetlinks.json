@@ -1,6 +1,6 @@
 [{
         "relation": ["delegate_permission/common.handle_all_urls"],
         "target" : { "namespace": "android_app", "package_name": "com.bonsaiilabs.webpwapayments",
-                     "sha256_cert_fingerprints": ["2D:9A:FB:12:37:EE:61:3A:F6:88:4B:C9:DF:96:67:34:FD:62:FF:69:69:D8:C7:1F:3D:26:1C:B1:19:90:8D:4F"] }
+                     "sha256_cert_fingerprints": ["DF:1E:28:B3:15:7F:9A:00:46:44:46:13:B5:A7:87:1C:5A:4B:22:88:0A:C0:EE:FA:2F:9A:20:22:81:08:54:E8"] }
       }
 ]
