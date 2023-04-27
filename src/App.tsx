@@ -4,8 +4,9 @@ import {Box} from "@mui/material";
 import 'cordova-plugin-purchase';
 import {DisplayPurchasedProduct} from "./store/DisplayPurchasedProduct";
 import {DisplayPurchasableProduct} from "./store/DisplayPurchasableProduct";
+import {Capacitor} from '@capacitor/core';
+import WebPaymentCard from "./components/WebPaymentCard";
 
-//const iOSProductId = "pwaInAppPurchasePro9_99"
 const productId = "pwa_inapp_pro_9_99"
 
 const App = () => {
@@ -32,18 +33,19 @@ const App = () => {
         });
     }
 
-    const placeOrder = (product: CdvPurchase.Product) => {
+    const placeOrderOnNativeStore = (product: CdvPurchase.Product) => {
         console.log(`placing order for productId=${product.id}`)
         const offer = store.get(product.id, product.platform)?.getOffer();
         offer?.order()
             .then(result => {
                 if (result) {
                     console.log("ERROR. Failed to place order. " + result.code + ": " + result.message);
+                    // todo: show a pop-up to where they can submit a form to get contacted by us to collect payment.
                 } else {
                     // todo: update db that the user has purchased item
                     console.log(`${product.title} with ${product.id} ordered successfully`);
                 }
-            });
+            })
     }
 
     const updateUI = (product: CdvPurchase.Product) => {
@@ -55,7 +57,11 @@ const App = () => {
     }
 
     useEffect(() => {
-        console.log("Setting up store if this is a mobile device")
+        console.log(`Native App store version: ${store.version}`)
+        if (!Capacitor.isNativePlatform()) {
+            console.log(`This is not a native platform, returning`)
+            return
+        }
         document.addEventListener("deviceready", () => {
             store.verbosity = LogLevel.DEBUG;
 
@@ -98,7 +104,7 @@ const App = () => {
     return (
         <div className="App">
             <header className="App-header">
-                {productsOwned && <Box>
+                {Capacitor.isNativePlatform() && productsOwned && <Box>
                     {Array.from(productsOwned.values()).map(p => {
                         return <DisplayPurchasedProduct product={p}/>
                     })}
@@ -108,8 +114,9 @@ const App = () => {
                     {purchasableProducts
                         .filter(p => p.canPurchase)
                         .map(product => <DisplayPurchasableProduct product={product}
-                                                                   onClick={placeOrder}/>)}
+                                                                   onClick={placeOrderOnNativeStore}/>)}
                 </Box>}
+                {!Capacitor.isNativePlatform() && <WebPaymentCard onClick={() => console.log("Sending to stripe")}/>}
             </header>
         </div>
     );
