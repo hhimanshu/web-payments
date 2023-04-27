@@ -1,0 +1,6 @@
+[{
+        "relation": ["delegate_permission/common.handle_all_urls"],
+        "target" : { "namespace": "android_app", "package_name": "com.bonsaiilabs.payments",
+                     "sha256_cert_fingerprints": ["7B:A6:DC:4C:BB:23:29:53:D7:33:A5:D0:5E:0D:17:E5:71:DE:60:FF:01:8F:27:A8:9B:96:3C:FD:D8:A8:71:82"] }
+      }
+]
