@@ -8,6 +8,9 @@
     "short_name": "pwa_payments",
     "description": "How to take payments on iOS and Play",
     "orientation": "portrait",
+    "categories": ["react", "pwa", "payments", "google play", "android", "ios"],
+    "dir": "ltr",
+    "display_override": ["standalone", "minimal-ui"],
     "icons": [
         {
             "src": "/icon-192x192.png",
