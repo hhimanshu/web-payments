@@ -1,0 +1,44 @@
+{
+    "theme_color": "#5A0FC8",
+    "background_color": "#fff",
+    "display": "standalone",
+    "scope": "/",
+    "start_url": "/",
+    "name": "PWA Web Payments",
+    "short_name": "pwa_payments",
+    "description": "How to take payments on iOS and Play",
+    "orientation": "portrait",
+    "categories": ["react", "pwa", "payments", "google play", "android", "ios"],
+    "dir": "ltr",
+    "display_override": ["standalone", "minimal-ui"],
+    "icons": [
+        {
+            "src": "/icon-192x192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "any"
+        },
+        {
+            "src": "/icon-256x256.png",
+            "sizes": "256x256",
+            "type": "image/png"
+        },
+        {
+            "src": "/icon-384x384.png",
+            "sizes": "384x384",
+            "type": "image/png"
+        },
+        {
+            "src": "/icon-512x512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ],
+    "shortcuts" : [
+      {
+        "name": "Home",
+        "url": "/",
+        "description": "A place to make payments"
+      }
+    ]
+}
