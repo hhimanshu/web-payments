@@ -6,6 +6,8 @@ import {DisplayPurchasedProduct} from "./store/DisplayPurchasedProduct";
 import {DisplayPurchasableProduct} from "./store/DisplayPurchasableProduct";
 import {Capacitor} from '@capacitor/core';
 import WebPaymentCard from "./components/WebPaymentCard";
+import {openAppStore, shouldAppUpdate} from "./app-update/update";
+import AppUpdateDialog from "./components/AppUpdateDialog";
 
 const productId = "pwa_inapp_pro_9_99"
 
@@ -13,6 +15,7 @@ const App = () => {
     const {store, ProductType, Platform, LogLevel} = CdvPurchase;
     const [purchasableProducts, setPurchasableProducts] = useState<CdvPurchase.Product[]>([])
     const [productsOwned, setProductsOwned] = useState<Set<CdvPurchase.Product>>()
+    const [showAppUpdateDialog, setShowAppUpdateDialog] = useState<boolean>(false)
 
     const updatePurchases = (receipt: CdvPurchase.Receipt) => {
         let productsOwned = new Set<CdvPurchase.Product>();
@@ -55,6 +58,20 @@ const App = () => {
             console.log(`  price: ${pricing.price} ${pricing.currency}`);
         }
     }
+
+    useEffect(() => {
+        const checkForUpdates = async () => {
+            if (await shouldAppUpdate()) {
+                console.log(`App update needed, show dialog`)
+                setShowAppUpdateDialog(true);
+            }
+        }
+        if (Capacitor.isNativePlatform()) {
+            console.log("Checking for app updates")
+            checkForUpdates()
+                .catch((e) => console.error("Error in checking updates", e))
+        }
+    }, [])
 
     useEffect(() => {
         console.log(`Native App store version: ${store.version}`)
@@ -104,19 +121,25 @@ const App = () => {
     return (
         <div className="App">
             <header className="App-header">
-                {Capacitor.isNativePlatform() && productsOwned && <Box>
-                    {Array.from(productsOwned.values()).map(p => {
-                        return <DisplayPurchasedProduct product={p}/>
-                    })}
+                {!showAppUpdateDialog && <Box>
+                    {Capacitor.isNativePlatform() && productsOwned && <Box>
+                        {Array.from(productsOwned.values()).map(p => {
+                            return <DisplayPurchasedProduct product={p}/>
+                        })}
+                    </Box>
+                    }
+                    {purchasableProducts && <Box>
+                        {purchasableProducts
+                            .filter(p => p.canPurchase)
+                            .map(product => <DisplayPurchasableProduct product={product}
+                                                                       onClick={placeOrderOnNativeStore}/>)}
+                    </Box>}
                 </Box>
                 }
-                {purchasableProducts && <Box>
-                    {purchasableProducts
-                        .filter(p => p.canPurchase)
-                        .map(product => <DisplayPurchasableProduct product={product}
-                                                                   onClick={placeOrderOnNativeStore}/>)}
-                </Box>}
-                {!Capacitor.isNativePlatform() && <WebPaymentCard onClick={() => console.log("Sending to stripe")}/>}
+                {!Capacitor.isNativePlatform() &&
+                    <WebPaymentCard onClick={() => console.log("Sending to stripe")}/>}
+                {showAppUpdateDialog && <AppUpdateDialog onLater={() => console.log("Later")}
+                                                         onDownload={openAppStore}/>}
             </header>
         </div>
     );
