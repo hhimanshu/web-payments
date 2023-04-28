@@ -62,7 +62,7 @@ const App = () => {
     useEffect(() => {
         const checkForUpdates = async () => {
             if (await shouldAppUpdate()) {
-                console.log(`App update needed, show dialog`)
+                console.log(`App update needed, show update dialog`)
                 setShowAppUpdateDialog(true);
             }
         }
